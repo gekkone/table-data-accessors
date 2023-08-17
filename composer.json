@@ -1,0 +1,41 @@
+{
+  "name": "gekkone/table-data-accessors",
+  "description": "A common interface for accessing table data. Contains implementations for csv and google spreadsheets",
+  "minimum-stability": "stable",
+  "type": "library",
+  "license": "CC-BY-4.0",
+  "authors": [
+    {
+      "name": "gekkone",
+      "email": "dev@gekkone.tech",
+      "role": "developer",
+      "homepage": "https://github.com/gekkone"
+    }
+  ],
+  "require": {
+    "ext-mbstring": "*",
+    "guzzlehttp/psr7": "^2.6",
+    "google/apiclient": "^2.7"
+  },
+  "scripts": {
+    "post-update-cmd": "Google_Task_Composer::cleanup"
+  },
+  "extra": {
+    "google/apiclient-services": [
+      "Sheets"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "Gekkone\\TdaLib\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.3"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\":"tests"
+    }
+  }
+}
