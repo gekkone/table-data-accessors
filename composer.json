@@ -1,6 +1,7 @@
 {
   "name": "gekkone/table-data-accessors",
   "description": "A common interface for accessing table data. Contains implementations for csv and google spreadsheets",
+  "keywords": ["csv", "google spreadsheets", "google sheets", "table data reader"],
   "minimum-stability": "stable",
   "type": "library",
   "license": "CC-BY-4.0",
