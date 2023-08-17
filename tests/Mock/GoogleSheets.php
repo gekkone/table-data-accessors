@@ -6,8 +6,7 @@ use Google;
 use Google\Service\Sheets;
 use Google\Service\Sheets\Spreadsheet;
 use Google\Service\Sheets\ValueRange;
-use PHPUnit\Framework\MockObject\Generator\Generator as MockGenerator;
-use PHPUnit\Event;
+use PHPUnit\Framework\MockObject;
 use InvalidArgumentException;
 use OutOfBoundsException;
 
@@ -133,7 +132,7 @@ final class GoogleSheets
 
     protected static function createStub($originalClassName)
     {
-        $stub = (new MockGenerator)->getMock(
+        $stub = (new MockObject\Generator())->getMock(
             $originalClassName,
             [],
             [],
@@ -147,7 +146,6 @@ final class GoogleSheets
             false
         );
 
-        Event\Facade::emitter()->testCreatedStub($originalClassName);
         return $stub;
     }
 

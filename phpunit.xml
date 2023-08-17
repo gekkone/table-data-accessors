@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
-  <coverage/>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         failOnSkipped="true" failOnIncomplete="true" failOnRisky="true" failOnEmptyTestSuite="true"
+         failOnWarning="true"
+>
   <testsuites>
     <testsuite name="lib">
       <directory>tests</directory>
     </testsuite>
   </testsuites>
-  <source>
+  <coverage>
     <include>
       <directory suffix=".php">src</directory>
     </include>
-  </source>
+  </coverage>
 </phpunit>
