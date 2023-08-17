@@ -5,8 +5,8 @@ namespace Gekkone\TdaLib\Accessor;
 use Gekkone\TdaLib\Accessor\Csv\TableOptions;
 use Gekkone\TdaLib\ResolveColumnNameTrait;
 use Gekkone\TdaLib\TableIteratorInterface;
-use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use InvalidArgumentException;
 use RuntimeException;
 use UnexpectedValueException;
 

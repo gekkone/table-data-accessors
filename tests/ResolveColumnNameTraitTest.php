@@ -40,7 +40,6 @@ class ResolveColumnNameTraitTest extends TestCase
         $options->addColumn('Тестовый заголовок');
         $options->addColumn('notFound', 'test');
 
-
         $headerRow = ['Header', 'Тeстовый зaгoлoвоk', 'HeADer '];
         self::assertSame($headerRow, $resolver->resolveColumnNames($headerRow));
         $resolver->parseHeaderRow($headerRow, $options);
@@ -62,8 +61,6 @@ class ResolveColumnNameTraitTest extends TestCase
             ['hdr', 'Тестовый заголовок', 2],
             array_keys($resolver->resolveColumnNames(['', '', '']))
         );
-
-        //TODO
     }
 
     protected function makeTrait()
