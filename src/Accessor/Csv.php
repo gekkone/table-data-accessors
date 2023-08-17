@@ -5,6 +5,7 @@ namespace Gekkone\TdaLib\Accessor;
 use Gekkone\TdaLib\Accessor\Csv\TableOptions;
 use Gekkone\TdaLib\ResolveColumnNameTrait;
 use Gekkone\TdaLib\TableIteratorInterface;
+use Onnov\DetectEncoding\EncodingDetector;
 use Psr\Http\Message\StreamInterface;
 use InvalidArgumentException;
 use RuntimeException;
@@ -124,13 +125,12 @@ class Csv implements TableIteratorInterface
             //check and remove byte order mark (U+FEFF)
             $line = self::removeBOM($line);
         }
-        $encoding = mb_detect_encoding($line, ['UTF-8', 'Windows-1251'], true);
-        //remove boom from first line
-        if ($encoding == 'UTF-8' && $this->rowIndex == 1) {
-            $line = self::removeBOM($line);
-        }
 
-        if ($encoding !== 'UTF-8') {
+        $detector = new EncodingDetector();
+        $detector->disableEncoding([EncodingDetector::ISO_8859_5]);
+        $encoding = $detector->getEncoding($line);
+
+        if ($encoding !== EncodingDetector::UTF_8) {
             $line = mb_convert_encoding($line, 'UTF-8', $encoding);
             if ($line === false) {
                 throw new UnexpectedValueException(
