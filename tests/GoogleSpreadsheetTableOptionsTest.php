@@ -10,6 +10,33 @@ use InvalidArgumentException;
 
 class GoogleSpreadsheetTableOptionsTest extends TestCase
 {
+    public static function makeFailedConstructTestData()
+    {
+        $service = new Sheets(
+            new Google\Client([
+                'scopes' => [Sheets::SPREADSHEETS_READONLY, 'test']
+            ])
+        );
+
+        return [
+            'without required scopes'   => [
+                new Sheets(new Google\Client()),
+                md5(random_bytes(4096))
+            ],
+            'with empty spreadsheetId'  => [$service, ''],
+            'with in lowercase range'   => [$service, ' ', 33, 'a:c'],
+            'with range with row index' => [$service, ' ', 33, 'A1:C1'],
+        ];
+    }
+
+    public static function makeFailedSetRangeTestData()
+    {
+        return [
+            'lower case range' => ['a:c'],
+            'range with row indexes' => ['A1:B5']
+        ];
+    }
+
     public function testConstructor()
     {
         $service = new Google\Service\Sheets(
@@ -28,25 +55,24 @@ class GoogleSpreadsheetTableOptionsTest extends TestCase
         $options = new TableOptions($service, $spreadsheetId, 2345, 'A:V');
         self::assertSame(2345, $options->getSheetId());
         self::assertSame('A:V', $options->getRange());
+    }
 
-        //google client without mandatory scopes
+    /**
+     * @dataProvider makeFailedConstructTestData
+     */
+    public function testFailedConstruct()
+    {
         $this->expectException(InvalidArgumentException::class);
-        new TableOptions(new Sheets(new Google\Client()), $spreadsheetId);
-
-        //empty spreadsheet
-        $this->expectException(InvalidArgumentException::class);
-        new TableOptions($service, '');
-
-        //invalid range
-        $this->expectException(InvalidArgumentException::class);
-        new TableOptions($service, ' ', null, 'A1:B1');
+        new TableOptions(...func_get_args());
     }
 
     public function testSetGetRange()
     {
-        $service = new Google\Service\Sheets(new Google\Client([
-            'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
-        ]));
+        $service = new Google\Service\Sheets(
+            new Google\Client([
+                'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
+            ])
+        );
         $options = new TableOptions($service, ' ');
 
         $options->setRange('A:C');
@@ -54,11 +80,23 @@ class GoogleSpreadsheetTableOptionsTest extends TestCase
 
         $options->setRange('AA:BCR');
         self::assertSame('AA:BCR', $options->getRange());
+    }
+
+    /**
+     * @dataProvider makeFailedSetRangeTestData
+     */
+    public function testFailedSetRange(string $range)
+    {
+        $options = new TableOptions(
+            new Google\Service\Sheets(
+                new Google\Client([
+                    'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
+                ])
+            ),
+            ' '
+        );
 
         $this->expectException(InvalidArgumentException::class);
-        $options->setRange('a:c');
-
-        $this->expectException(InvalidArgumentException::class);
-        $options->setRange('A1:B5');
+        $options->setRange($range);
     }
 }
