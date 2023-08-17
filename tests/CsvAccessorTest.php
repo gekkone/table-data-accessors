@@ -1,13 +1,11 @@
 <?php
 
-namespace Tests;
+namespace Gekkone\TdaLib\Tests;
 
 use Gekkone\TdaLib\Accessor\Csv;
-use GuzzleHttp\Psr7\Stream;
-use Monolog\Test\TestCase;
 use Psr\Http\Message\StreamInterface;
-
-use function PHPUnit\Framework\assertSame;
+use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Stream;
 
 class CsvAccessorTest extends TestCase
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Mock;
+namespace Gekkone\TdaLib\Tests\Mock;
 
 use Google;
 use Google\Service\Sheets;
 use Google\Service\Sheets\Spreadsheet;
 use Google\Service\Sheets\ValueRange;
+use PHPUnit\Framework\MockObject\Generator\Generator as MockGenerator;
+use PHPUnit\Event;
 use InvalidArgumentException;
 use OutOfBoundsException;
-use PHPUnit\Event;
-use PHPUnit\Framework\MockObject\Generator\Generator as MockGenerator;
 
 final class GoogleSheets
 {

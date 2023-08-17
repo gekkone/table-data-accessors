@@ -1,8 +1,11 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Gekkone\TdaLib\Tests;
+
 use Gekkone\TdaLib\Accessor\Csv\TableOptions;
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Stream;
+use InvalidArgumentException;
 
 class CsvTableOptionsTest extends TestCase
 {

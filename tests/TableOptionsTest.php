@@ -1,7 +1,9 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Gekkone\TdaLib\Tests;
+
 use Gekkone\TdaLib\Accessor\TableOptions;
+use PHPUnit\Framework\TestCase;
 
 class TableOptionsTest extends TestCase
 {

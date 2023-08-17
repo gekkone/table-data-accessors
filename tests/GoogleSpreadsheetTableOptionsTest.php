@@ -1,16 +1,22 @@
 <?php
 
+namespace Gekkone\TdaLib\Tests;
+
 use Gekkone\TdaLib\Accessor\GoogleSheet\TableOptions;
 use Google\Service\Sheets;
+use Google;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
 class GoogleSpreadsheetTableOptionsTest extends TestCase
 {
     public function testConstructor()
     {
-        $service = new Google\Service\Sheets(new Google\Client([
-            'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
-        ]));
+        $service = new Google\Service\Sheets(
+            new Google\Client([
+                'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
+            ])
+        );
         $spreadsheetId = md5(random_bytes(4096));
 
         $options = new TableOptions($service, $spreadsheetId);

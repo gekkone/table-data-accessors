@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Gekkone\TdaLib\Tests;
 
 use Gekkone\TdaLib\Accessor\TableOptions;
 use Gekkone\TdaLib\ResolveColumnNameTrait;

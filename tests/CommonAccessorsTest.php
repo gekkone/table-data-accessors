@@ -1,10 +1,12 @@
 <?php
 
+namespace Gekkone\TdaLib\Tests;
+
 use Gekkone\TdaLib\Accessor\Csv;
 use Gekkone\TdaLib\Accessor\GoogleSheet;
 use Gekkone\TdaLib\TableIteratorInterface;
-use GuzzleHttp\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\Stream;
 
 class CommonAccessorsTest extends TestCase
 {
@@ -174,9 +176,9 @@ class CommonAccessorsTest extends TestCase
             'values' => $tableData
         ];
 
-        return new Gekkone\TdaLib\Accessor\GoogleSheet(
+        return new GoogleSheet(
             new GoogleSheet\TableOptions(
-                Tests\Mock\GoogleSheets::make($spreadsheetId, $sheets),
+                Mock\GoogleSheets::make($spreadsheetId, $sheets),
                 $spreadsheetId,
                 $sheetId,
                 $range,

@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests;
+namespace Gekkone\TdaLib\Tests;
 
 use Gekkone\TdaLib\Accessor\GoogleSheet;
 use Gekkone\TdaLib\Accessor\GoogleSheet\TableOptions;
+use PHPUnit\Framework\TestCase;
 use OutOfBoundsException;
 use OutOfRangeException;
-use PHPUnit\Framework\TestCase;
-use Tests\Mock;
 
 class GoogleSheetAccessorTest extends TestCase
 {
