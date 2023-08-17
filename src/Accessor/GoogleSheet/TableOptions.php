@@ -6,6 +6,9 @@ use Gekkone\TdaLib\Accessor;
 use Google;
 use InvalidArgumentException;
 
+/**
+ * @method static static new(Google\Service\Sheets $service, string $spreadsheetId, ?int $sheetId = null, ?string $range = null, int $chunkSize = self::DEFAULT_CHUNK_SIZE)
+ */
 class TableOptions extends Accessor\TableOptions
 {
     public const DEFAULT_CHUNK_SIZE = 500;
@@ -40,8 +43,6 @@ class TableOptions extends Accessor\TableOptions
         ?string $range = null,
         int $chunkSize = self::DEFAULT_CHUNK_SIZE
     ) {
-        parent::__construct();
-
         if (!$this->checkClientScopes($service->getClient())) {
             throw new InvalidArgumentException(
                 'Google client must contain at least one of the following scope: '

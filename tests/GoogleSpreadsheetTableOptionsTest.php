@@ -3,10 +3,10 @@
 namespace Gekkone\TdaLib\Tests;
 
 use Gekkone\TdaLib\Accessor\GoogleSheet\TableOptions;
-use Google\Service\Sheets;
 use Google;
-use PHPUnit\Framework\TestCase;
+use Google\Service\Sheets;
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 class GoogleSpreadsheetTableOptionsTest extends TestCase
 {
@@ -32,8 +32,18 @@ class GoogleSpreadsheetTableOptionsTest extends TestCase
     public static function makeFailedSetRangeTestData()
     {
         return [
-            'lower case range' => ['a:c'],
+            'lower case range'       => ['a:c'],
             'range with row indexes' => ['A1:B5']
+        ];
+    }
+
+    public static function makeSetChunkSizeTestData()
+    {
+        return [
+            [0, true],
+            [-1, true],
+            [1, false],
+            [999, false]
         ];
     }
 
@@ -51,10 +61,16 @@ class GoogleSpreadsheetTableOptionsTest extends TestCase
         self::assertSame($spreadsheetId, $options->getSpreadsheetId());
         self::assertNull($options->getRange());
         self::assertNull($options->getSheetId());
+        self::assertSame(TableOptions::DEFAULT_CHUNK_SIZE, $options->getChunkSize());
 
-        $options = new TableOptions($service, $spreadsheetId, 2345, 'A:V');
+        self::assertEquals($options, TableOptions::new($service, $spreadsheetId));
+
+
+        $options = new TableOptions($service, $spreadsheetId, 2345, 'A:V', 24);
         self::assertSame(2345, $options->getSheetId());
         self::assertSame('A:V', $options->getRange());
+        self::assertSame(24, $options->getChunkSize());
+        self::assertEquals($options, TableOptions::new($service, $spreadsheetId, 2345, 'A:V', 24));
     }
 
     /**
@@ -98,5 +114,76 @@ class GoogleSpreadsheetTableOptionsTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $options->setRange($range);
+    }
+
+    /**
+     * @dataProvider makeSetChunkSizeTestData
+     */
+    public function testSetChunkSize($chunkSize, bool $expectException)
+    {
+        $options = new TableOptions(
+            new Google\Service\Sheets(
+                new Google\Client([
+                    'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
+                ])
+            ),
+            ' '
+        );
+
+        if ($expectException) {
+            $this->expectException(InvalidArgumentException::class);
+        }
+        $options->setChunkSize($chunkSize);
+        if (!$expectException) {
+            self::assertSame($chunkSize, $options->getChunkSize());
+        }
+    }
+
+    /**
+     * @dataProvider makeSetChunkSizeTestData
+     */
+    public function testSetChunkSizeInConstructor($chunkSize, bool $expectException)
+    {
+        if ($expectException) {
+            $this->expectException(InvalidArgumentException::class);
+        }
+        $options = new TableOptions(
+            new Google\Service\Sheets(
+                new Google\Client([
+                    'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
+                ])
+            ),
+            ' ',
+            null,
+            null,
+            $chunkSize
+        );
+        if (!$expectException) {
+            self::assertSame($chunkSize, $options->getChunkSize());
+        }
+    }
+
+    /**
+     * @dataProvider makeSetChunkSizeTestData
+     */
+    public function testSetChunkInStaticConstruct($chunkSize, bool $expectException)
+    {
+        if ($expectException) {
+            $this->expectException(InvalidArgumentException::class);
+        }
+        $options = TableOptions::new(
+            new Google\Service\Sheets(
+                new Google\Client([
+                    'scopes' => [Sheets::SPREADSHEETS_READONLY, "test"]
+                ])
+            ),
+            ' ',
+            null,
+            null,
+            $chunkSize
+        );
+        if (!$expectException) {
+            self::assertSame($chunkSize, $options->getChunkSize());
+        }
     }
 }

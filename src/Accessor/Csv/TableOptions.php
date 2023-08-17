@@ -6,6 +6,9 @@ use Gekkone\TdaLib\Accessor;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 
+/**
+ * @method static static new(StreamInterface $source, ?string $columnSeparator = null)
+ */
 class TableOptions extends Accessor\TableOptions
 {
     public const AVAILABLE_COLUMN_SEPARATORS = [',', ';', "\t"];
@@ -18,14 +21,11 @@ class TableOptions extends Accessor\TableOptions
      */
     public function __construct(StreamInterface $source, ?string $columnSeparator = null)
     {
-        parent::__construct();
-
         if (!$source->isSeekable() || !$source->isReadable()) {
             throw new InvalidArgumentException(
                 'Source must have isSeekable and isReadable'
             );
         }
-
 
         $this->source = $source;
         if (is_string($columnSeparator)) {

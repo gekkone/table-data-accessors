@@ -3,18 +3,30 @@
 namespace Gekkone\TdaLib\Tests;
 
 use Gekkone\TdaLib\Accessor\Csv\TableOptions;
-use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Stream;
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 class CsvTableOptionsTest extends TestCase
 {
-    public function testConstructor()
+    public static function makeValidSeparatorSet()
+    {
+        return [[','], [';'], ["\t"]];
+    }
+
+    public static function makeInvalidSeparatorSet()
+    {
+        return [["\n"], [''], ['test'], [' '], [' '], [1], ['-'], ['\\']];
+    }
+
+    public function testSetSourceInConstructor()
     {
         $source = new Stream(tmpfile());
         $options = new TableOptions($source);
         self::assertSame($source, $options->getSource());
         self::assertNull($options->getColumnSeparator());
+
+        self::assertEquals($options, TableOptions::new($source));
 
         //stream is must be readable and seekable
         self::expectException(InvalidArgumentException::class);
@@ -22,12 +34,16 @@ class CsvTableOptionsTest extends TestCase
     }
 
     /**
-     * @dataProvider makeValidSeparatorData
+     * @dataProvider makeValidSeparatorSet
      */
-    public function testValidSeparator($separatorSymbol)
+    public function testSetSeparator($separatorSymbol)
     {
         //constructor
         $options = new TableOptions(new Stream(tmpfile()), $separatorSymbol);
+        self::assertSame($separatorSymbol, $options->getColumnSeparator());
+
+        //static construct method
+        $options = TableOptions::new(new Stream(tmpfile()), $separatorSymbol);
         self::assertSame($separatorSymbol, $options->getColumnSeparator());
 
         //setter & getter
@@ -36,27 +52,32 @@ class CsvTableOptionsTest extends TestCase
     }
 
     /**
-     * @dataProvider makeInvalidSeparatorData
+     * @dataProvider makeInvalidSeparatorSet
      */
-    public function testInvalidSeparator($separatorSymbol)
+    public function testFailedSetSeparator($separatorSymbol)
     {
-        //constructor
-        $this->expectException(InvalidArgumentException::class);
-        $options = new TableOptions(new Stream(tmpfile()), $separatorSymbol);
-
         //setter & getter
         $this->expectException(InvalidArgumentException::class);
         $this->makeOptions()->setColumnSeparator($separatorSymbol);
     }
 
-    public static function makeValidSeparatorData()
+
+    /**
+     * @dataProvider makeInvalidSeparatorSet
+     */
+    public function testFailedSeparatorInConstructor($separatorSymbol)
     {
-        return [[','], [';'], ["\t"]];
+        $this->expectException(InvalidArgumentException::class);
+        new TableOptions(new Stream(tmpfile()), $separatorSymbol);
     }
 
-    public static function makeInvalidSeparatorData()
+    /**
+     * @dataProvider makeInvalidSeparatorSet
+     */
+    public function testFailedSeparatorInConstructMethod($separatorSymbol)
     {
-        return [["\n"], [''], ['test'], [' '], [' '], [1], ['-'], ['\\']];
+        $this->expectException(InvalidArgumentException::class);
+        TableOptions::new(new Stream(tmpfile()), $separatorSymbol);
     }
 
     protected function makeOptions()

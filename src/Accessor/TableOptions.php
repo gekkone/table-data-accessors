@@ -7,7 +7,10 @@ class TableOptions
     protected array $headerAliasMap = [];
     protected array $requiredHeaders = [];
 
-    public function __construct() {}
+    public static function new(): self
+    {
+        return new static(...func_get_args());
+    }
 
     public static function normalizeColumnName(string $name): string
     {
