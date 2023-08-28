@@ -2,6 +2,8 @@
 
 namespace Gekkone\TdaLib\Accessor;
 
+use InvalidArgumentException;
+
 class TableOptions
 {
     protected array $headerAliasMap = [];
@@ -40,22 +42,25 @@ class TableOptions
 
     /**
      * @param string $name - convert to case-insensitivity and rus ord 'ё' to 'е'
-     * @param string|null $alias
+     * @param string|null $alias - if empty, param name will be used as alias
      * @param bool $required
-     * @return bool - if append column, false if column name duplicated
+     * @return self
+     * @throws InvalidArgumentException - if append column, false if column name duplicated
      */
     public function addColumn(
         string $name,
         ?string $alias = null,
         bool $required = false
-    ): bool {
+    ): self {
         if (empty(trim($alias))) {
             $alias = $name;
         }
         $name = self::normalizeColumnName($name);
 
         if (array_key_exists($name, $this->headerAliasMap)) {
-            return false;
+            throw new InvalidArgumentException(
+                "Column $name already exists with alias {$this->headerAliasMap[$name]}"
+            );
         }
 
         $this->headerAliasMap[$name] = $alias;
@@ -63,7 +68,7 @@ class TableOptions
             $this->requiredHeaders[] = $name;
         }
 
-        return true;
+        return $this;
     }
 
     public function getRequiredColumns(): array
