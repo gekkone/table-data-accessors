@@ -128,7 +128,8 @@ class GoogleSheet implements TableIteratorInterface
 
         $chunk = $this->options->getService()->spreadsheets_values
             ->get($this->options->getSpreadsheetId(), $range);
-        foreach ($chunk->getValues() as $row => $rowData) {
+
+        foreach ($chunk->getValues() ?? [] as $row => $rowData) {
             if ($this->offset == 0 && $row == 0) {
                 $this->parseHeaderRow($rowData, $this->options);
                 ++$this->rowIndex;
