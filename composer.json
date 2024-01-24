@@ -15,7 +15,6 @@
   ],
   "require": {
     "ext-mbstring": "*",
-    "guzzlehttp/psr7": "^2.6",
     "google/apiclient": "^2.7",
     "onnov/detect-encoding": "^2.0"
   },
@@ -33,6 +32,7 @@
     }
   },
   "require-dev": {
+    "guzzlehttp/psr7": "^2.6",
     "phpunit/phpunit": "^9.6"
   },
   "autoload-dev": {
